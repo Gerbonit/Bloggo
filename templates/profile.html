@@ -1,0 +1,11 @@
+<!DOCTYPE HTML>
+<center><table>
+  <tr><td><img src="{{ user_profile_pic }}" width=256 height=256></td></tr>
+  <tr><td><H1>{{ username }}</H1></td></tr>
+  <tr><td>{{ userbio }}</td></tr>
+  {% for post in posts %}
+    <tr><td><li><h2>{{ post }}</h2></li></td></tr>
+  {% else %}
+    <tr><td><li><em>Unbelievable.  No posts here so far</em></li></td></tr>
+  {% endfor %}
+</table></center>
