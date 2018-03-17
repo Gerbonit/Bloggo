@@ -1,8 +1,37 @@
 <!DOCTYPE HTML>
-<title>Blog</title>
 
-<frameset cols="30%,*,30%">
-  <frame src="/blank/" noresize="noresize">
-  <frame src="{{ main }}" noresize="noresize">
-  <frame src="/blank/" noresize="noresize">
-</frameset>
+<html>
+  
+  <head>
+
+    <title>Bloggo</title>
+
+    <style type="text/css">
+      html, body {
+        height:100%;
+        margin:0px;
+        padding:0px;
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <table style="width:100%; height:100%; background-color:#FFE0E0; margin:auto;">
+      <tr style="height:100%">
+        <td style="width:30%">
+        </td>
+        <td style="width:40%; vertical-align:top;">
+         {% block body %}{% endblock %}
+        </td>
+        <td style="width:30%; text-align:right; vertical-align:top;">
+          Sign in<br>
+          Sign up
+        </td>
+      </tr>
+    </table>
+
+  </body>
+
+</html>
