@@ -22,12 +22,17 @@
       <tr style="height:100%">
         <td style="width:30%">
         </td>
-        <td style="width:40%; vertical-align:top;">
+        <td style="width:40%; vertical-align:top; background-color:#E0FFE0">
          {% block body %}{% endblock %}
         </td>
         <td style="width:30%; text-align:right; vertical-align:top;">
-          Sign in<br>
-          Sign up
+          {% if session['username'] %}
+            Logged as <a href="/user/{{ username }}">@{{ username }}<br>
+            <a href="/logout">Log out</a>
+          {% else %}
+            <a href="/signin">Sign in</a><br>
+            <a href="/signup">Sign up</a>
+          {% endif %}
         </td>
       </tr>
     </table>

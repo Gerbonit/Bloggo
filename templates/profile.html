@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 {% block body %}
-<table style="width:100%; background-color:#AFFFAF; padding:10px; border-spacing:5px">
-  <tr><td><center><img src="{{ picture }}" width=256 height=256></center></td></tr>
-  <tr><td><center><H2>{{ name }} {{ surname }}</H2></center></td></tr>
-  <tr><td><center><H3>@{{ username }}</H3></center></td></tr>
-  <tr><td><center><em>{{ userbio }}</em></center></td></tr>
-  <tr><td><center><table style="width:95%; background-color:#FFAFAF; padding:10px; border-spacing:15px" >
-    {% for i, head, text in posts %}
-      <tr><td><a href="/user/{{ username }}/{{ i }}/"><big>{{ head }}</big></a><br>
-              {{ text }}</td></tr>
-    {% else %}
-      <tr><td><center><em>Unbelievable. No posts here so far</em></center></td></tr>
-    {% endfor %}
-  </table></center></td></tr>
-</table>
+  <table style="width:100%; background-color:#AFFFAF; padding:10px; border-spacing:5px">
+    <tr><td><center><img src="{{ picture }}" width=256 height=256></center></td></tr>
+    <tr><td><center><H2>{{ name }} {{ surname }}</H2></center></td></tr>
+    <tr><td><center><H3>@{{ username }}</H3></center></td></tr>
+    <tr><td><center><em>{{ userbio }}</em></center></td></tr>
+    <tr><td><center><table style="width:95%; background-color:#D0D0FF; padding:10px; border-spacing:15px" >
+      {% for i, content in posts %}
+        <tr><td><a href="/user/{{ username }}/post/{{ i }}/"><big>{{ content['head'] }}</big></a><br>
+                {{ content['text'] }}</td></tr>
+      {% else %}
+        <tr><td><center><em>Unbelievable. No posts here so far</em></center></td></tr>
+      {% endfor %}
+    </table></center></td></tr>
+  </table>
 {% endblock %}

@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block body %}
+  <table style="width:100%; height:100%; background-color:#AFFFAF; margin:auto; padding:10px; border-spacing: 10px;">
+    <tr style="height:25px">
+      <td>
+        <H1>{{ head }}</H1>
+      </td>
+    </tr>
+    <tr style="height:15px">
+      <td>
+        <em><a href="/user/{{ username }}">@{{ username }}</a></em>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align:top;">
+        {{ text }}
+      </td>
+    </tr>
+  </table>
+{% endblock %}
