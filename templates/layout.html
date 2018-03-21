@@ -6,6 +6,8 @@
 
     <title>Bloggo</title>
 
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
     <style type="text/css">
       html, body {
         height:100%;
@@ -18,7 +20,7 @@
 
   <body>
 
-    <table style="width:100%; height:100%; background-color:#FFE0E0; margin:auto;">
+    <table style="width:100%; height:100%; background-color:#FDF5E6; margin:auto;">
       <tr style="height:100%">
         <td style="width:30%">
         </td>
@@ -27,7 +29,7 @@
         </td>
         <td style="width:30%; text-align:right; vertical-align:top;">
           {% if session['username'] %}
-            Logged as <a href="/user/{{ username }}">@{{ username }}<br>
+            Logged as <a href="/user/{{ session['username'] }}">@{{ session['username'] }}<br>
             <a href="/logout">Log out</a>
           {% else %}
             <a href="/signin">Sign in</a><br>

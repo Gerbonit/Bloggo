@@ -38,6 +38,21 @@ def show_user_post(username, post_id):
                                       head = head,
                                       text = text)
 
+@app.route('/new_post/', methods = ['GET', 'POST'])
+def add_post():
+  if 'username' not in session:
+    return redirect('/signin')
+  if request.method == 'POST':
+    head = request.form['head']
+    text = request.form['text']
+    from os import listdir
+    n = len(listdir('user/{username}/post/'.format(username = session['username'])))
+    import json
+    with open('user/{username}/post/{n}.json'.format(username = session['username'], n = n), 'wt') as file:
+      file.write(json.dumps({ 'head': head, 'text': text }, indent = 2))
+    return redirect(url_for('show_user_profile', username = session['username']))
+  return render_template('new_post.html')
+
 def check_user(username, password):
   from os import listdir
   users = listdir('user/')
@@ -47,14 +62,11 @@ def check_user(username, password):
   from Crypto.Hash import SHA256
   hashing = SHA256.new()
   hashing.update(bytes(password, 'ascii'))
-  print(password_hash)
-  print(password)
-  print(str(hashing.digest()))
   if str(hashing.digest()) != password_hash:
     return 'wrong password'
   return None
 
-@app.route('/signin/', methods=['GET', 'POST'])
+@app.route('/signin/', methods = ['GET', 'POST'])
 def signin():
   if request.method == 'POST':
     session['username'] = request.form['username']
@@ -65,10 +77,19 @@ def signin():
       return render_template('signin.html', error = error)
   return render_template('signin.html' )
 
+@app.route('/signup/', methods = ['GET', 'POST'])
+def signup():
+  if request.method == 'POST':
+    username = request.form('username')
+    password = request.form('password')
+    password_repeat = request.form('password_repeat')
+    return redirect(url_for('signin'))
+  return render_template('signup.html')
+
 @app.route('/logout')
 def logout():
   session.pop('username', None)
   return redirect('/')
 
 if __name__ == '__main__':
-	app.run(debug = True)
+	app.run(debug = True, host = '0.0.0.0')

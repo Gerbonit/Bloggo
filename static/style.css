@@ -1,0 +1,11 @@
+a {
+  color: black;
+}
+
+a:visited {
+  color: black;
+}
+
+a:active {
+  color: red;
+}

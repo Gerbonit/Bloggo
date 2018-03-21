@@ -5,6 +5,9 @@
     <tr><td><center><H2>{{ name }} {{ surname }}</H2></center></td></tr>
     <tr><td><center><H3>@{{ username }}</H3></center></td></tr>
     <tr><td><center><em>{{ userbio }}</em></center></td></tr>
+    {% if session['username'] %}
+      <tr><td><center><a href={{ url_for('add_post') }}>New post</a></center></td></tr>
+    {% endif %}
     <tr><td><center><table style="width:95%; background-color:#D0D0FF; padding:10px; border-spacing:15px" >
       {% for i, content in posts %}
         <tr><td><a href="/user/{{ username }}/post/{{ i }}/"><big>{{ content['head'] }}</big></a><br>
