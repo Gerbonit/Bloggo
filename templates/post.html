@@ -5,6 +5,11 @@
       <td>
         <H1>{{ head }}</H1>
       </td>
+      {% if editable %}
+        <td style="text-align: right">
+          <a href={{ url_for('edit_post', post_id = post_id) }}>edit</a>
+      {% endif %}
+      </td>
     </tr>
     <tr style="height:15px">
       <td>

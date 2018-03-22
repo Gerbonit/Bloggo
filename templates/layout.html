@@ -29,7 +29,7 @@
         </td>
         <td style="width:30%; text-align:right; vertical-align:top;">
           {% if session['username'] %}
-            Logged as <a href="/user/{{ session['username'] }}">@{{ session['username'] }}<br>
+            Logged as <a href="/user/{{ session['username'] }}">@{{ session['username'] }}</a><br>
             <a href="/logout">Log out</a>
           {% else %}
             <a href="/signin">Sign in</a><br>

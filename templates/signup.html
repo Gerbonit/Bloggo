@@ -2,7 +2,7 @@
 {% block body %}
   <h2>Sign up</h2>
   {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-  <form action="{{ url_for('signup') }}" method=post>
+  <form action="{{ url_for('signup') }}" method=post enctype="multipart/form-data">
     <dl>
       <dt>Username:
       <dd><input type=text name=username>
@@ -10,11 +10,15 @@
       <dd><input type=password name=password>
       <dt>Repeat password:
       <dd><input type=password name=password_repeat>
+      <dt>Name:
+      <dd><input type=text name=name>
+      <dt>Surname:
+      <dd><input type=text name=surname>
       <dt>Bio:
       <dd><textarea name=bio rows=3 cols=40></textarea>
-      <dt>Link on profile picture:
-      <dd><input type=pic_link name=username>
-      <dd><input type=submit value="Sign in">
+      <dt>Profile picture:
+      <dd><input type="file" name="profile_pic" accept="image/*">
+      <dd><input type=submit value="Sign up">
     </dl>
   </form>
 {% endblock %}

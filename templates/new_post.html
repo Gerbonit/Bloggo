@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
-  <form action="{{ url_for('add_post') }}" method=post>
+  <form action="{{ where }}" method=post>
     <dl>
       <dt>Title:
-      <dd><input type=text size=30 name=head>
+      <dd><input type=text size=30 name=head{% if head %} value="{{ head }}"{% endif %}>
       <dt>Text:
-      <dd><textarea name=text rows=5 cols=40></textarea>
+      <dd><textarea name=text rows=5 cols=40>{% if text %}{{ text }}{% endif %}</textarea>
       <dd><input type=submit value=Done>
     </dl>
   </form>
