@@ -8,7 +8,7 @@ app.secret_key = open('secret_key', 'rb').read()
 
 @app.route('/index/')
 def index():
-  pass
+  return redirect(url_for('show_profile'))
 
 @app.route('/profile/')
 def show_profile():
@@ -40,8 +40,16 @@ def show_user_profile(username, my = False):
                                          userbio  = userbio,
                                          posts    = posts)
 
-@app.route('/user/<username>/post/<post_id>/')
-def show_user_post(username, post_id):
+@app.route('/post/<int:post_id>/')
+def show_post(post_id):
+  if 'username' not in session:
+    return redirect(url_for('signin'))
+  return show_user_post(session['username'], post_id, True)
+
+@app.route('/user/<username>/post/<int:post_id>/')
+def show_user_post(username, post_id, my = False):
+  if not my and 'username' in session and username == session['username']:
+    return redirect(url_for('show_profile'))
   post = eval(open('user/' + username + '/post/' + post_id + '.json', 'rt').read())
   head = post['head']
   text = post['text'].replace('\r\n', '(%br%)')
