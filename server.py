@@ -1,12 +1,21 @@
 #!/usr/bin/python3
 
 from flask import Flask, render_template, url_for, request, session, redirect
+from os import listdir, makedirs
+
+def jsdump(dct, filename):
+  from json import dump
+  dump(dct, open(filename, 'wt'), indent = 2)
+
+def jsload(filename):
+  from json import load
+  return load(open(filename, 'rt'))
 
 app = Flask('Bloggo')
 
 app.secret_key = open('secret_key', 'rb').read()
 
-@app.route('/index/')
+@app.route('/')
 def index():
   return redirect(url_for('show_profile'))
 
@@ -20,9 +29,8 @@ def show_profile():
 def show_user_profile(username, my = False):
   if not my and 'username' in session and username == session['username']:
     return redirect(url_for('show_profile'))
-  from os import listdir
 
-  info = eval(open('user/' + username + '/info.json', 'rt').read())
+  info = jsload('user/{username}/info.json'.format(username = username))
   name = info['name']
   surname = info['surname']
   profile_picture_link = info['profile_picture_link']
@@ -30,7 +38,7 @@ def show_user_profile(username, my = False):
 
   files = [ (int(file[:-len('.json')]), file) for file in listdir('user/' + username + '/post/') ]
   files.sort()
-  posts = [ (pair[0], eval(open('user/' + username + '/post/' + pair[1], 'rt').read())) for pair in files ][::-1]
+  posts = [ (pair[0], jsload('user/' + username + '/post/' + pair[1])) for pair in files ][::-1]
   picture = url_for('static', filename = profile_picture_link)
 
   return render_template('profile.html', picture  = picture,
@@ -49,8 +57,8 @@ def show_post(post_id):
 @app.route('/user/<username>/post/<int:post_id>/')
 def show_user_post(username, post_id, my = False):
   if not my and 'username' in session and username == session['username']:
-    return redirect(url_for('show_profile'))
-  post = eval(open('user/' + username + '/post/' + post_id + '.json', 'rt').read())
+    return redirect(url_for('show_post', post_id = post_id))
+  post = jsload('user/{username}/post/{post_id}.json'.format(username = username, post_id = post_id))
   head = post['head']
   text = post['text'].replace('\r\n', '(%br%)')
   return render_template('post.html', username = username,
@@ -66,11 +74,8 @@ def add_post():
   if request.method == 'POST':
     head = request.form['head']
     text = request.form['text']
-    from os import listdir
     n = len(listdir('user/{username}/post/'.format(username = session['username'])))
-    import json
-    with open('user/{username}/post/{n}.json'.format(username = session['username'], n = n), 'wt') as file:
-      file.write(json.dumps({ 'head': head, 'text': text }, indent = 2))
+    jsdump({ 'head': head, 'text': text }, 'user/{username}/post/{n}.json'.format(username = session['username'], n = n))
     return redirect(url_for('show_user_profile', username = session['username']))
   return render_template('new_post.html', where = '/new_post/')
 
@@ -82,22 +87,19 @@ def edit_post(post_id):
     head = request.form['head']
     text = request.form['text']
     import json
-    with open('user/{username}/post/{n}.json'.format(username = session['username'], n = post_id), 'wt') as file:
-      file.write(json.dumps({ 'head': head, 'text': text }, indent = 2))
+    jsdump({ 'head': head, 'text': text }, 'user/{username}/post/{n}.json'.format(username = session['username'], n = post_id))
     return redirect(url_for('show_user_profile', username = session['username']))
-  with open('user/{username}/post/{n}.json'.format(username = session['username'], n = post_id), 'rt') as file:
-    info = eval(file.read())
-    head = info['head']
-    text = info['text']
+  info = jsload('user/{username}/post/{n}.json'.format(username = session['username'], n = post_id))
+  head = info['head']
+  text = info['text']
   return render_template('new_post.html', where = '/edit/post/{post_id}/'.format(post_id = post_id),
                                           head = head, text = text)
 
 def check_user(username, password):
-  from os import listdir
   users = listdir('user/')
   if username not in users:
     return 'wrong username'
-  password_hash = eval(open('user/' + username + '/info.json', 'rt').read())['password_hash']
+  password_hash = jsload('user/{username}/info.json'.format(username = username))['password_hash']
   from Crypto.Hash import SHA256
   hashing = SHA256.new()
   hashing.update(bytes(password, 'ascii'))
@@ -108,9 +110,9 @@ def check_user(username, password):
 @app.route('/signin/', methods = ['GET', 'POST'])
 def signin():
   if request.method == 'POST':
-    session['username'] = request.form['username']
     error = check_user(request.form['username'], request.form['password'])
     if error == None:
+      session['username'] = request.form['username']
       return redirect(url_for('show_user_profile', username = request.form['username']))
     else:
       return render_template('signin.html', error = error)
@@ -124,6 +126,8 @@ def signup():
       return render_template('signup.html', error = 'Username mustn\'t contain spaces')
     if username.find('/') != -1:
       return render_template('signup.html', error = 'Username mustn\'t contain "/" symbols')
+    if username in listdir('user/'):
+      return render_template('signup.html', error = 'Username already exists!')
     password = request.form['password']
     password_repeat = request.form['password_repeat']
     if password != password_repeat:
@@ -141,14 +145,13 @@ def signup():
     from Crypto.Hash import SHA256
     hashing = SHA256.new()
     hashing.update(bytes(password, 'ascii'))
-    from os import makedirs
     makedirs('user/{username}/post'.format(username = username))
-    with open('user/{username}/info.json'.format(username = username), 'wt'.format(username = username)) as info:
-      info.write(json.dumps({ 'password_hash': str(hashing.digest()),
-                              'name': name,
-                              'surname': surname,
-                              'profile_picture_link': profile_picture_link,
-                              'bio': bio }, indent = 2))
+    jsdump({ 'password_hash': str(hashing.digest()),
+             'name': name,
+             'surname': surname,
+             'profile_picture_link': profile_picture_link,
+             'bio': bio },
+           'user/{username}/info.json'.format(username = username))
     return redirect(url_for('signin'))
   return render_template('signup.html')
 
