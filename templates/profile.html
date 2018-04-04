@@ -10,7 +10,7 @@
     {% endif %}
     <tr><td><center><table style="width:95%; background-color:#D0D0FF; padding:10px; border-spacing:15px" >
       {% for i, content in posts %}
-        <tr><td><a href="/user/{{ username }}/post/{{ i }}/"><big>{{ content['head'] }}</big></a><br>
+        <tr><td><a href={{ url_for('show_user_post', username = username, post_id = i) }}><big>{{ content['head'] }}</big></a><br>
                 {{ content['text'] }}</td></tr>
       {% else %}
         <tr><td><center><em>Unbelievable. No posts here so far</em></center></td></tr>

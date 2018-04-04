@@ -2,6 +2,7 @@
 
 from flask import Flask, render_template, url_for, request, session, redirect
 from os import listdir, makedirs
+from hashlib import sha256
 
 def jsdump(dct, filename):
   from json import dump
@@ -14,6 +15,8 @@ def jsload(filename):
 app = Flask('Bloggo')
 
 app.secret_key = open('secret_key', 'rb').read()
+app.jinja_env.trim_blocks = True
+app.jinja_env.lstrip_blocks = True
 
 @app.route('/')
 def index():
@@ -100,8 +103,7 @@ def check_user(username, password):
   if username not in users:
     return 'wrong username'
   password_hash = jsload('user/{username}/info.json'.format(username = username))['password_hash']
-  from Crypto.Hash import SHA256
-  hashing = SHA256.new()
+  hashing = sha256()
   hashing.update(bytes(password, 'ascii'))
   if str(hashing.digest()) != password_hash:
     return 'wrong password'
@@ -142,8 +144,7 @@ def signup():
     else:
       profile_picture_link = 'profile_picture/default.jpg'
     import json
-    from Crypto.Hash import SHA256
-    hashing = SHA256.new()
+    hashing = sha256()
     hashing.update(bytes(password, 'ascii'))
     makedirs('user/{username}/post'.format(username = username))
     jsdump({ 'password_hash': str(hashing.digest()),
