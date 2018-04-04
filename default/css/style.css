@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&subset=cyrillic');
+@import "reset.css";
+
+body {
+	font-family: 'Source Sans Pro', sans-serif;
+	width: 750px;
+	margin: 0 auto;
+	padding-top: 10px;
+}
+
+#header {
+	overflow: hidden;
+}
+
+.nav {
+	float: left;
+	width: 200px;
+	height: 40px;
+	background: rgba(255, 0, 0, 0.6);
+	text-align: center;
+	font-size: 25px;
+	padding-top: 10px;
+	transition: 0.125s;
+	user-select: none;
+}
+
+.nav:hover {
+	background: rgba(255, 255, 255, 1);
+	color: rgba(255, 0, 0, 0.6);
+}
+
+
+#content {
+	height: 400px;
+	width: 750px;
+	background: rgba(0, 0, 255, 0.2);
+	margin-top: 10px;
+}
+
+#logIn {
+	width: 140px;
+	float: left;
+	margin-left: 10px;
+}
+
+#signIn, #signUp {
+	height: 20px;
+	background: rgba(255, 0, 0, 0.6);
+	text-align: center;
+	padding-top: 2.5px;
+	user-select: none;
+	width: 140px;
+	transition: 0.125s;
+}
+
+#signIn {
+	margin-bottom: 5px;
+}
+
+#signIn:hover, #signUp:hover {
+	background: rgba(255, 255, 255, 1);
+	color: rgba(255, 0, 0, 0.6);
+}
